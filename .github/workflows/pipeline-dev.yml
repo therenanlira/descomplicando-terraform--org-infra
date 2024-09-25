@@ -77,41 +77,41 @@ jobs:
           name: exit_code
           path: exit_code.txt
 
-  # apply:
-  #   name: 'Terraform Apply'
-  #   needs: terraform
-  #   runs-on: ubuntu-latest
-  #   if: always()
-  #   defaults:
-  #     run:
-  #       working-directory: .
+  apply:
+    name: 'Terraform Apply'
+    needs: terraform
+    runs-on: ubuntu-latest
+    if: always()
+    defaults:
+      run:
+        working-directory: .
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Set up Terraform
-  #       uses: hashicorp/setup-terraform@v2
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
 
-  #     - name: Download Plan artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: tfplan
+      - name: Download Plan artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
 
-  #     - name: Download exit code artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: exit_code
+      - name: Download exit code artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: exit_code
 
-  #     - name: Read exit code
-  #       id: check_exit_code
-  #       run: echo $(cat exit_code.txt)
+      - name: Read exit code
+        id: check_exit_code
+        run: echo $(cat exit_code.txt)
 
-  #     - name: Terraform Init
-  #       run: terraform init
+      - name: Terraform Init
+        run: terraform init
 
-  #     - name: Terraform Apply
-  #       if: steps.check_exit_code.outputs == '2'
-  #       run: terraform apply -auto-approve tfplan
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Terraform Apply
+        if: steps.check_exit_code.outputs == '2'
+        run: terraform apply -auto-approve tfplan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
