@@ -81,7 +81,7 @@ jobs:
     name: 'Terraform Apply'
     needs: terraform
     runs-on: ubuntu-latest
-    if: always()
+    if: success()
     defaults:
       run:
         working-directory: .
