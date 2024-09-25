@@ -19,12 +19,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.0
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         id: init
@@ -43,7 +41,7 @@ jobs:
       - name: Run tfsec
         if: success() && steps.fmt.outcome == 'success'
         id: tfsec
-        uses: aquasecurity/tfsec-action@v1
+        uses: aquasecurity/tfsec-action@v2 # Updated tfsec version
 
       - name: Terraform Plan
         if: success() && steps.tfsec.outcome == 'success'
@@ -63,7 +61,7 @@ jobs:
 
       - name: Upload Plan as artifact
         if: steps.check_changes.outcome == 'success'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3 # Updated to version 3
         with:
           name: tfplan
           path: tfplan
@@ -72,7 +70,7 @@ jobs:
         run: echo $? > exit_code.txt
 
       - name: Upload exit code artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3 # Updated to version 3
         with:
           name: exit_code
           path: exit_code.txt
@@ -88,20 +86,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.0
+        uses: hashicorp/setup-terraform@v2
 
       - name: Download Plan artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3 # Updated to version 3
         with:
           name: tfplan
 
       - name: Download exit code artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3 # Updated to version 3
         with:
           name: exit_code
 
