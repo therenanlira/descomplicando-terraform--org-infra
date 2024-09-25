@@ -15,7 +15,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | ../../../therenanlira--descomplicando-terraform--vpc-module/ | n/a |
+| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | git@github.com:descomplicando-terraform/therenanlira--descomplicando-terraform--vpc-module.git | n/a |
 
 ## Resources
 
@@ -53,7 +53,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | ../../../therenanlira--descomplicando-terraform--vpc-module/ | n/a |
+| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | git@github.com:descomplicando-terraform/therenanlira--descomplicando-terraform--vpc-module.git | n/a |
 
 ## Resources
 
