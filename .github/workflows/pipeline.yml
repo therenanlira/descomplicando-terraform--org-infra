@@ -49,16 +49,39 @@ jobs:
         if: success() && steps.tfsec.outcome == 'success'
         id: plan
         run: terraform plan -out=tfplan
+        continue-on-error: true
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          terraform plan -detailed-exitcode || true
+        continue-on-error: true
 
       - name: Save Plan Output
-        if: steps.plan.outputs.stdout != ''
+        if: steps.check_changes.outcome == 'success'
         run: echo "tfplan" > planfile
+
+      - name: Upload Plan as artifact
+        if: steps.check_changes.outcome == 'success'
+        uses: actions/upload-artifact@v2
+        with:
+          name: tfplan
+          path: tfplan
+
+      - name: Save exit code to file
+        run: echo $? > exit_code.txt
+
+      - name: Upload exit code artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: exit_code
+          path: exit_code.txt
 
   apply:
     name: 'Terraform Apply'
     needs: terraform
     runs-on: ubuntu-latest
-    if: steps.plan.outputs.stdout != ''
+    if: always()
     defaults:
       run:
         working-directory: .
@@ -72,10 +95,25 @@ jobs:
         with:
           terraform_version: 1.0.0
 
+      - name: Download Plan artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: tfplan
+
+      - name: Download exit code artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: exit_code
+
+      - name: Read exit code
+        id: check_exit_code
+        run: echo $(cat exit_code.txt)
+
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Apply
+        if: steps.check_exit_code.outputs == '2'
         run: terraform apply -auto-approve tfplan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
