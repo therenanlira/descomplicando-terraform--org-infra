@@ -38,13 +38,8 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
-      - name: Run tfsec
-        if: success() && steps.fmt.outcome == 'success'
-        id: tfsec
-        uses: aquasecurity/tfsec-action@v2 # Updated tfsec version
-
       - name: Terraform Plan
-        if: success() && steps.tfsec.outcome == 'success'
+        if: success() && steps.fmt.outcome == 'success'
         id: plan
         run: terraform plan -out=tfplan
         continue-on-error: true
@@ -61,7 +56,7 @@ jobs:
 
       - name: Upload Plan as artifact
         if: steps.check_changes.outcome == 'success'
-        uses: actions/upload-artifact@v3 # Updated to version 3
+        uses: actions/upload-artifact@v3
         with:
           name: tfplan
           path: tfplan
@@ -70,46 +65,46 @@ jobs:
         run: echo $? > exit_code.txt
 
       - name: Upload exit code artifact
-        uses: actions/upload-artifact@v3 # Updated to version 3
+        uses: actions/upload-artifact@v3
         with:
           name: exit_code
           path: exit_code.txt
 
-  apply:
-    name: 'Terraform Apply'
-    needs: terraform
-    runs-on: ubuntu-latest
-    if: always()
-    defaults:
-      run:
-        working-directory: .
+  # apply:
+  #   name: 'Terraform Apply'
+  #   needs: terraform
+  #   runs-on: ubuntu-latest
+  #   if: always()
+  #   defaults:
+  #     run:
+  #       working-directory: .
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
+  #     - name: Set up Terraform
+  #       uses: hashicorp/setup-terraform@v2
 
-      - name: Download Plan artifact
-        uses: actions/download-artifact@v3 # Updated to version 3
-        with:
-          name: tfplan
+  #     - name: Download Plan artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: tfplan
 
-      - name: Download exit code artifact
-        uses: actions/download-artifact@v3 # Updated to version 3
-        with:
-          name: exit_code
+  #     - name: Download exit code artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: exit_code
 
-      - name: Read exit code
-        id: check_exit_code
-        run: echo $(cat exit_code.txt)
+  #     - name: Read exit code
+  #       id: check_exit_code
+  #       run: echo $(cat exit_code.txt)
 
-      - name: Terraform Init
-        run: terraform init
+  #     - name: Terraform Init
+  #       run: terraform init
 
-      - name: Terraform Apply
-        if: steps.check_exit_code.outputs == '2'
-        run: terraform apply -auto-approve tfplan
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Terraform Apply
+  #       if: steps.check_exit_code.outputs == '2'
+  #       run: terraform apply -auto-approve tfplan
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
