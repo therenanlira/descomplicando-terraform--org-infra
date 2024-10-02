@@ -8,6 +8,12 @@ locals {
   vpc_cidr         = "10.0.0.0"
   enable_ipv6      = false
   enable_flow_logs = false
+
+  default_tags = {
+    Environment = local.environment
+    Org         = local.org_name
+    Project     = local.project
+  }
 }
 
 module "org_vpc" {
@@ -22,4 +28,6 @@ module "org_vpc" {
 
   enable_ipv6      = local.enable_ipv6
   enable_flow_logs = local.enable_flow_logs
+
+  default_tags = local.default_tags
 }
