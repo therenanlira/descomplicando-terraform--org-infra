@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: Terraform Validation PR
 
 on:
@@ -30,3 +31,61 @@ jobs:
           path: ${{ matrix.environment.path }}
 
     environment: ${{ matrix.environment.name }}
+=======
+name: Terraform Steps
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      path:
+        required: true
+        type: string
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.path }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up Terraform 1.9.5
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.9.5
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+<<<<<<<< HEAD:.github/workflows/terraform-validate-step.yml
+
+    environment: ${{ inputs.environment }}
+========
+  
+    environment: ${{ matrix.environment.name }}
+>>>>>>>> main:.github/workflows/pipeline-pr-main.yml
+>>>>>>> main
