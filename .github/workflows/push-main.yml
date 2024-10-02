@@ -1,5 +1,11 @@
 name: Terraform CI/CD
 
+env:
+  - name: dev
+    path: ./environments/dev
+  - name: prod
+    path: ./environments/prod
+
 on:
   push:
     branches:
@@ -9,21 +15,17 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: 'Terraform Plan'
+    name: "Terraform Plan ${{ env.name }}"
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        env: ${{ env.name }}
+
+    environment: ${{ matrix.env }}
 
     defaults:
       run:
-        working-directory: ${{ matrix.environment.path }}
-
-    environment: ${{ matrix.environment.name }}
+        working-directory: ${{ env.path }}
 
     steps:
       - name: Checkout repository
@@ -61,21 +63,17 @@ jobs:
   apply:
     needs: plan
     runs-on: ubuntu-latest
-    name: 'Terraform Apply'
+    name: "Terraform Apply ${{ env.name }}"
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        env: ${{ env.name }}
+
+    environment: ${{ matrix.env }}
 
     defaults:
       run:
-        working-directory: ${{ matrix.environment.path }}
-
-    environment: ${{ matrix.environment.name }}
+        working-directory: ${{ env.path }}
 
     steps:
       - name: Checkout repository
@@ -107,21 +105,17 @@ jobs:
   destroy:
     needs: apply
     runs-on: ubuntu-latest
-    name: 'Terraform Destroy'
+    name: "Terraform Destroy ${{ env.name }}"
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        env: ${{ env.name }}
+
+    environment: ${{ matrix.env }}
 
     defaults:
       run:
-        working-directory: ${{ matrix.environment.path }}
-
-    environment: ${{ matrix.environment.name }}
+        working-directory: ${{ env.path }}
 
     steps:
       - name: Checkout repository
