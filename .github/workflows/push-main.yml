@@ -1,5 +1,9 @@
 name: Terraform CI/CD
 
+env:
+  - name: envs
+    value: dev,prod
+
 on:
   push:
     branches:
@@ -13,9 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-          - name: prod
+        environment: ${{ fromJson(env.envs) }}
 
     defaults:
       run:
@@ -63,11 +65,7 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        environment: ${{ fromJson(env.envs) }}
 
     defaults:
       run:
@@ -109,11 +107,7 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        environment: ${{ fromJson(env.envs) }}
 
     defaults:
       run:
