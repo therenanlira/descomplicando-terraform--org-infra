@@ -1,11 +1,5 @@
 name: Terraform CI/CD
 
-env:
-  - name: dev
-    path: ./environments/dev
-  - name: prod
-    path: ./environments/prod
-
 on:
   push:
     branches:
@@ -15,17 +9,19 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: "Terraform Plan ${{ env.name }}"
+    name: 'Terraform Plan'
 
     strategy:
       matrix:
-        env: ${{ env.name }}
-
-    environment: ${{ matrix.env }}
+        environment:
+          - name: dev
+          - name: prod
 
     defaults:
       run:
-        working-directory: ${{ env.path }}
+        working-directory: "./environments/${{ matrix.environment.name }}"
+
+    environment: ${{ matrix.environment.name }}
 
     steps:
       - name: Checkout repository
@@ -63,17 +59,21 @@ jobs:
   apply:
     needs: plan
     runs-on: ubuntu-latest
-    name: "Terraform Apply ${{ env.name }}"
+    name: 'Terraform Apply'
 
     strategy:
       matrix:
-        env: ${{ env.name }}
-
-    environment: ${{ matrix.env }}
+        environment:
+          - name: dev
+            path: ./environments/dev
+          - name: prod
+            path: ./environments/prod
 
     defaults:
       run:
-        working-directory: ${{ env.path }}
+        working-directory: "./environments/${{ matrix.environment.name }}"
+
+    environment: ${{ matrix.environment.name }}
 
     steps:
       - name: Checkout repository
@@ -105,17 +105,21 @@ jobs:
   destroy:
     needs: apply
     runs-on: ubuntu-latest
-    name: "Terraform Destroy ${{ env.name }}"
+    name: 'Terraform Destroy'
 
     strategy:
       matrix:
-        env: ${{ env.name }}
-
-    environment: ${{ matrix.env }}
+        environment:
+          - name: dev
+            path: ./environments/dev
+          - name: prod
+            path: ./environments/prod
 
     defaults:
       run:
-        working-directory: ${{ env.path }}
+        working-directory: "./environments/${{ matrix.environment.name }}"
+
+    environment: ${{ matrix.environment.name }}
 
     steps:
       - name: Checkout repository
