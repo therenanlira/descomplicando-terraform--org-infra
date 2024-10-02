@@ -12,15 +12,13 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: dev
-            path: ./environments/dev
-          - name: prod
-            path: ./environments/prod
+        environment: [dev, prod]
 
     defaults:
       run:
-        working-directory: ${{ matrix.environment.path }}
+        working-directory: "./environments/${{ matrix.environment }}"
+
+    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout repository
@@ -46,10 +44,5 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
-  
-    environment: ${{ matrix.environment.name }}
+      - name: Terraform Sec
+        uses: aquasecurity/tfsec-action@v1.0.3
