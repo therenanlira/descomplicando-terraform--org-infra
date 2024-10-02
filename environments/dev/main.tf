@@ -1,6 +1,7 @@
 locals {
   org_name    = "therenanlira"
   environment = "dev"
+  project     = "descomplicando-terraform"
   region      = "us-east-2"
 
   azs_count        = 1
