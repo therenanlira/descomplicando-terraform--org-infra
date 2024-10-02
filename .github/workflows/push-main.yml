@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: 'Terraform CI'
+    name: 'Terraform Plan'
 
     strategy:
       matrix:
@@ -21,7 +22,6 @@ jobs:
     defaults:
       run:
         working-directory: ${{ matrix.environment.path }}
-
 
     environment: ${{ matrix.environment.name }}
 
@@ -61,7 +61,7 @@ jobs:
   apply:
     needs: plan
     runs-on: ubuntu-latest
-    name: 'Terraform CD'
+    name: 'Terraform Apply'
 
     strategy:
       matrix:
@@ -100,9 +100,14 @@ jobs:
   
       - name: Terraform Init
         run: terraform init
+
+      - name: Manual Approval
+        uses: chrnorm/deploy-approval-action@v1.1.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan
       
   destroy:
     needs: apply
@@ -146,6 +151,11 @@ jobs:
   
       - name: Terraform Init
         run: terraform init
-  
+
+      - name: Manual Approval
+        uses: chrnorm/deploy-approval-action@v1.1.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
