@@ -1,75 +1,62 @@
-# DEV Environment
+# therenanlira--descomplicando-terraform--org-infra
 
-<!-- BEGIN_TF_DOCS -->
-## Requirements
+This repository contains the Terraform configuration files for managing the infrastructure of the organization. The goal is to provide a scalable, maintainable, and efficient way to manage cloud resources.
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
+## Prerequisites
 
-## Providers
+- [Terraform](https://www.terraform.io/downloads.html) v0.12 or later
+- [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
+- [Git](https://git-scm.com/)
 
-No providers.
+## Getting Started
 
-## Modules
+1. **Clone the repository:**
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | git@github.com:descomplicando-terraform/therenanlira--descomplicando-terraform--vpc-module.git | n/a |
+    ```sh
+    git clone https://github.com/therenanlira/descomplicando-terraform.git
+    cd therenanlira--descomplicando-terraform--org-infra
+    ```
 
-## Resources
+2. **Initialize Terraform:**
 
-No resources.
+    ```sh
+    terraform init
+    ```
 
-## Inputs
+3. **Plan the infrastructure changes:**
 
-No inputs.
+    ```sh
+    terraform plan
+    ```
 
-## Outputs
+4. **Apply the infrastructure changes:**
 
-| Name | Description |
-|------|-------------|
-| <a name="output_org_vpc_eip"></a> [org\_vpc\_eip](#output\_org\_vpc\_eip) | n/a |
-| <a name="output_org_vpc_id"></a> [org\_vpc\_id](#output\_org\_vpc\_id) | n/a |
-| <a name="output_org_vpc_private_subnets"></a> [org\_vpc\_private\_subnets](#output\_org\_vpc\_private\_subnets) | n/a |
-| <a name="output_org_vpc_public_subnets"></a> [org\_vpc\_public\_subnets](#output\_org\_vpc\_public\_subnets) | n/a |
-| <a name="output_org_vpc_vpc_cidr_block"></a> [org\_vpc\_vpc\_cidr\_block](#output\_org\_vpc\_vpc\_cidr\_block) | n/a |
-<!-- END_TF_DOCS -->
+    ```sh
+    terraform apply
+    ```
 
-# PROD Environment
+## Directory Structure
 
-<!-- BEGIN_TF_DOCS -->
-## Requirements
+- `modules/` - Contains reusable Terraform modules.
+- `environments/` - Contains environment-specific configurations (e.g., dev, prod).
+- `scripts/` - Contains helper scripts for managing the infrastructure.
+- `main.tf` - The main Terraform configuration file.
+- `variables.tf` - Contains the variable definitions.
+- `outputs.tf` - Contains the output definitions.
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
+## Contributing
 
-## Providers
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Create a new Pull Request.
 
-No providers.
+## License
 
-## Modules
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_org_vpc"></a> [org\_vpc](#module\_org\_vpc) | git@github.com:descomplicando-terraform/therenanlira--descomplicando-terraform--vpc-module.git | n/a |
+## Contact
 
-## Resources
-
-No resources.
-
-## Inputs
-
-No inputs.
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| <a name="output_org_vpc_eip"></a> [org\_vpc\_eip](#output\_org\_vpc\_eip) | n/a |
-| <a name="output_org_vpc_id"></a> [org\_vpc\_id](#output\_org\_vpc\_id) | n/a |
-| <a name="output_org_vpc_private_subnets"></a> [org\_vpc\_private\_subnets](#output\_org\_vpc\_private\_subnets) | n/a |
-| <a name="output_org_vpc_public_subnets"></a> [org\_vpc\_public\_subnets](#output\_org\_vpc\_public\_subnets) | n/a |
-| <a name="output_org_vpc_vpc_cidr_block"></a> [org\_vpc\_vpc\_cidr\_block](#output\_org\_vpc\_vpc\_cidr\_block) | n/a |
-<!-- END_TF_DOCS -->
+For any questions or support, please open an issue in this repository.
