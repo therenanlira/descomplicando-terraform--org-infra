@@ -102,7 +102,7 @@ jobs:
         run: terraform init
   
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve
       
   destroy:
     needs: apply
