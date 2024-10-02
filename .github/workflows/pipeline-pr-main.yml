@@ -8,7 +8,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    name: 'Terraform CI/CD'
+    name: 'Terraform Validation'
 
     strategy:
       matrix:
