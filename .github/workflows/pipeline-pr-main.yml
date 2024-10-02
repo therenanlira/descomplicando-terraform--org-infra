@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  terraform:
+  plan:
     runs-on: ubuntu-latest
     name: 'Terraform Validation'
 
@@ -23,36 +23,10 @@ jobs:
         working-directory: ${{ matrix.environment.path }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Run Terraform Steps
+        uses: ./.github/workflows/terraform-validate-step.yml
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.9.5
-
-      - name: Initialize Terraform
-        run: terraform init
-
-      - name: Validate Terraform
-        run: terraform validate
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
+          environment: ${{ matrix.environment.name }}
+          path: ${{ matrix.environment.path }}
 
     environment: ${{ matrix.environment.name }}
