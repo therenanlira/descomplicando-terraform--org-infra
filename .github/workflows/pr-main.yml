@@ -1,22 +1,26 @@
-name: Terraform Steps
+name: Terraform Validation PR
 
 on:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-      path:
-        required: true
-        type: string
+  pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    name: 'Terraform CI/CD'
+
+    strategy:
+      matrix:
+        environment:
+          - name: dev
+            path: ./environments/dev
+          - name: prod
+            path: ./environments/prod
 
     defaults:
       run:
-        working-directory: ${{ inputs.path }}
+        working-directory: ${{ matrix.environment.path }}
 
     steps:
       - name: Checkout repository
@@ -47,10 +51,5 @@ jobs:
 
       - name: Terraform Format Check
         run: terraform fmt -check
-<<<<<<<< HEAD:.github/workflows/terraform-validate-step.yml
-
-    environment: ${{ inputs.environment }}
-========
   
     environment: ${{ matrix.environment.name }}
->>>>>>>> main:.github/workflows/pipeline-pr-main.yml
