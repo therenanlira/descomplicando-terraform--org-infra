@@ -1,0 +1,128 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    name: 'Terraform CI'
+
+    strategy:
+      matrix:
+        environment:
+          - name: dev
+            path: ./environments/dev
+          - name: prod
+            path: ./environments/prod
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.environment.path }}
+
+
+    environment: ${{ matrix.environment.name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.9.5
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          terraform plan -detailed-exitcode || true
+        continue-on-error: true
+
+      - name: Save Plan Output
+        if: steps.check_changes.outcome == 'success'
+        run: echo "tfplan" > planfile
+
+      - name: Upload Plan as artifact
+        if: steps.check_changes.outcome == 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
+
+  apply:
+    needs: plan
+    runs-on: ubuntu-latest
+    name: 'Terraform CD'
+
+    strategy:
+      matrix:
+        environment:
+          - name: dev
+            path: ./environments/dev
+          - name: prod
+            path: ./environments/prod
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.environment.path }}
+
+    environment: ${{ matrix.environment.name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.9.5
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Download Plan artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+  
