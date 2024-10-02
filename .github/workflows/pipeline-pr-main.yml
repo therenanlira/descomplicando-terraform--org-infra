@@ -38,18 +38,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up Terraform
+      - name: Set up Terraform 1.9.5
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.9.5
 
-      - name: Initialize Terraform
+      - name: Terraform Init
         run: terraform init
 
-      - name: Validate Terraform
+      - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Format Check
         run: terraform fmt -check
-
+  
     environment: ${{ matrix.environment.name }}
