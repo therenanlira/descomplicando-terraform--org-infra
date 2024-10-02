@@ -58,18 +58,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: Check for changes
-        id: check_changes
-        run: |
-          terraform plan -detailed-exitcode || true
-        continue-on-error: true
-
       - name: Save Plan Output
-        if: steps.check_changes.outcome == 'success'
         run: echo "tfplan" > planfile
 
       - name: Upload Plan as artifact
-        if: steps.check_changes.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
