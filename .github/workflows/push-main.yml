@@ -6,12 +6,6 @@ on:
       - main
   workflow_dispatch: # Allow manual trigger
 
-env:
-  - name: ENVIRONMENTS
-    value:
-      - dev
-      - prod
-
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -19,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        environment: ${{ env.ENVIRONMENTS }}
+        environment: [dev, prod]
 
     defaults:
       run:
@@ -61,7 +55,7 @@ jobs:
 
     strategy:
       matrix:
-        environment: ${{ env.ENVIRONMENTS }}
+        environment: [dev, prod]
 
     defaults:
       run:
@@ -103,7 +97,7 @@ jobs:
 
     strategy:
       matrix:
-        environment: ${{ env.ENVIRONMENTS }}
+        environment: [dev, prod]
 
     defaults:
       run:
