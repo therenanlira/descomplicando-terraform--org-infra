@@ -5,7 +5,7 @@ locals {
   region      = "us-east-2"
 
   azs_count        = 1
-  vpc_cidr         = "10.0.0.0"
+  vpc_cidr_block   = "10.0.0.0/16"
   enable_ipv6      = false
   enable_flow_logs = false
 
@@ -22,7 +22,7 @@ module "org_vpc" {
   org_name    = local.org_name
   environment = local.environment
 
-  vpc_cidr           = local.vpc_cidr
+  vpc_cidr_block     = local.vpc_cidr_block
   azs_count          = local.azs_count
   single_nat_gateway = true
 
