@@ -100,11 +100,6 @@ jobs:
   
       - name: Terraform Init
         run: terraform init
-
-      - name: Manual Approval
-        uses: chrnorm/deploy-approval-action@v1.1.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
@@ -151,11 +146,6 @@ jobs:
   
       - name: Terraform Init
         run: terraform init
-
-      - name: Manual Approval
-        uses: chrnorm/deploy-approval-action@v1.1.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
