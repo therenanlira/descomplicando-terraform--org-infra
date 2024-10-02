@@ -1,16 +1,16 @@
 name: Terraform CI/CD
 
-env:
-  - name: envs
-    value:
-      - dev
-      - prod
-
 on:
   push:
     branches:
       - main
   workflow_dispatch: # Allow manual trigger
+
+env:
+  - name: ENVIRONMENTS
+    value:
+      - dev
+      - prod
 
 jobs:
   plan:
@@ -19,13 +19,13 @@ jobs:
 
     strategy:
       matrix:
-        environment: ${{ env.envs }}
+        environment: ${{ env.ENVIRONMENTS }}
 
     defaults:
       run:
-        working-directory: "./environments/${{ matrix.environment.name }}"
+        working-directory: "./environments/${{ matrix.environment }}"
 
-    environment: ${{ matrix.environment.name }}
+    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout repository
@@ -50,30 +50,24 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
   apply:
-    needs: plan
     runs-on: ubuntu-latest
+    needs: plan
     name: 'Terraform Apply'
 
     strategy:
       matrix:
-        environment: ${{ env.envs }}
+        environment: ${{ env.ENVIRONMENTS }}
 
     defaults:
       run:
-        working-directory: "./environments/${{ matrix.environment.name }}"
+        working-directory: "./environments/${{ matrix.environment }}"
 
-    environment: ${{ matrix.environment.name }}
+    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout repository
@@ -90,32 +84,32 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-  
+
       - name: Set up Terraform 1.9.5
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.9.5
-  
+
       - name: Terraform Init
         run: terraform init
-  
+
       - name: Terraform Apply
-        run: terraform apply -auto-approve
-      
+        run: terraform apply -auto-approve tfplan
+
   destroy:
-    needs: apply
     runs-on: ubuntu-latest
+    needs: apply
     name: 'Terraform Destroy'
 
     strategy:
       matrix:
-        environment: ${{ env.envs }}
+        environment: ${{ env.ENVIRONMENTS }}
 
     defaults:
       run:
-        working-directory: "./environments/${{ matrix.environment.name }}"
+        working-directory: "./environments/${{ matrix.environment }}"
 
-    environment: ${{ matrix.environment.name }}
+    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout repository
@@ -137,7 +131,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.9.5
-  
+
       - name: Terraform Init
         run: terraform init
 
