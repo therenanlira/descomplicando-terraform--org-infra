@@ -37,10 +37,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up Terraform 1.9.5
+      - name: Set up Terraform 1.9.7
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.9.5
+          terraform_version: 1.9.7
 
       - name: Terraform Init
         run: terraform init
@@ -79,10 +79,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up Terraform 1.9.5
+      - name: Set up Terraform 1.9.7
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.9.5
+          terraform_version: 1.9.7
 
       - name: Terraform Init
         run: terraform init
@@ -121,10 +121,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up Terraform 1.9.5
+      - name: Set up Terraform 1.9.7
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.9.5
+          terraform_version: 1.9.7
 
       - name: Terraform Init
         run: terraform init
