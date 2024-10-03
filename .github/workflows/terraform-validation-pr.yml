@@ -14,8 +14,11 @@ jobs:
         environment: [dev, prod]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Call reusable Terraform workflow
-        uses: ./.github/workflows/terraform-common.yml@main
+        uses: ./.github/workflows/terraform-common.yml
         with:
           environment: ${{ matrix.environment }}
         env:
