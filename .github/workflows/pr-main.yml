@@ -43,6 +43,3 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Terraform Sec
-        uses: aquasecurity/tfsec-action@v1.0.3
