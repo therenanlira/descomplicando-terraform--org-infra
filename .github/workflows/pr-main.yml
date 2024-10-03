@@ -43,3 +43,12 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Linter
+        uses: hmbig2/tf-linter-action@v1.0.21
