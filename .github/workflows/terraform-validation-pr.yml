@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Call reusable Terraform workflow
-        uses: ./.github/workflows/terraform-common.yml
+        uses: ./.github/workflows/terraform-common.yml@main
         with:
           environment: ${{ matrix.environment }}
         env:
