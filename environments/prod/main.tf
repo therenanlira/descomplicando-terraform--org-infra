@@ -17,7 +17,7 @@ locals {
 }
 
 module "org_vpc" {
-  source = "git::https://github.com/descomplicando-terraform/therenanlira--descomplicando-terraform--vpc-module.git?ref=0.1.0"
+  source = "git::https://github.com/therenanlira/descomplicando-terraform--vpc-module.git?ref=0.1.0"
 
   org_name    = local.org_name
   environment = local.environment
